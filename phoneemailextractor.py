@@ -1,16 +1,12 @@
 #! python3
 # phoneemailextractor.py
 
-# class ideas
-# text grabber
-# finder
-# result producer
+# TODO implement user input feature to 1) paste text from clipboard, or 2) get text from .txt
 
 import re, pyperclip
 # import time
 
 
-# phone finder
 class Phone_Regex:
 	"""Contains a method of the regular expression pattern match to execute to
 	find phone numbers."""
@@ -23,10 +19,10 @@ class Phone_Regex:
 		"""
 		phone_regex = re.compile(r'''(
 		(\d{3}|\(\d{3}\))?     	       # area code
-		(\s|-|\.)?			   	       # separator
-		(\d{3}	)			   	       # first 3 digits
-		(\s|-|\.)			   	       # separator
-		(\d{4})				   	       # last 4 digits
+		(\s|-|\.)?		       # separator
+		(\d{3}	)		       # first 3 digits
+		(\s|-|\.)		       # separator
+		(\d{4})			       # last 4 digits
 		(\s*(ext|x|ext.)\s*\d{1,5})?   # extension
 		)''', re.VERBOSE)
 
@@ -48,6 +44,7 @@ class Email_Regex:
 
 		return email_regex
 
+# get copied text
 class Text_Grabber:
 	"""Takes text from clipboard and assigns it to variable 'text'."""
 
@@ -59,7 +56,6 @@ class Text_Grabber:
 	# def from_file(self, text_file):
 	# 	with open(text_file) as fo:
 	# 		regex_str = fo.read()
-
 
 # find matches
 class Finder:
@@ -79,7 +75,7 @@ class Finder:
 
 		return matches
 
-
+# output matches
 class Producer:
 	"""Output the found phone numbers and emails to clipboard, to terminal,
 	and/or to text file (text file incompl.)"""
@@ -109,23 +105,24 @@ class Producer:
 	#
 	# 	return print(f"Matches saved to {filename}")
 
-# get text
-# send text to phone and email regex
-# find matches
-# produce matches
+
 if __name__ == '__main__':
+	# get text
 	new_grabber = Text_Grabber()
 	text = new_grabber.from_clipboard()
-
+	
+	# send text to phone and email regex
 	new_phone_re = Phone_Regex()
 	phone_regex = new_phone_re.phone_regex_method()
 
 	new_email_re = Email_Regex()
 	email_regex = new_email_re.email_regex_method()
 
+	# find matches
 	new_finder = Finder()
 	matches = new_finder.finder_method(phone_regex, email_regex, text)
 
+	# produce matches
 	new_producer = Producer()
 	verified_matches = new_producer.check_for_matches(matches)
 	if verified_matches is not None:
